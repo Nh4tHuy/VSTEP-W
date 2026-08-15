@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VSTEP Writing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Tùy chỉnh thanh cuộn cho giao diện Glassmorphism */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.8);
+        }
+        
+        /* Font mượt mà hơn */
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .modal-glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-100 to-blue-200 text-slate-800 p-2 sm:p-4 lg:p-6 flex justify-center items-center overflow-hidden">
+
+    <!-- Main Container: Expanded for Laptop View -->
+    <div class="w-[98vw] max-w-[1600px] h-[96vh] glass-panel shadow-2xl rounded-3xl flex flex-col overflow-hidden relative">
+        
+        <!-- Header / Navigation -->
+        <div class="relative flex flex-col md:flex-row justify-between items-center p-4 sm:p-6 border-b border-white/50 bg-white/20 gap-4">
+            <!-- Left Logo/Title -->
+            <div class="flex items-center gap-3 w-full md:w-auto justify-center md:justify-start">
+                <div class="p-2 bg-blue-500/20 rounded-xl text-blue-600 flex items-center justify-center shadow-inner">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="7" x="3" y="3" rx="1"/><rect width="9" height="7" x="3" y="14" rx="1"/><rect width="5" height="7" x="16" y="14" rx="1"/></svg>
+                </div>
+                <h1 class="text-xl md:text-2xl font-bold text-blue-900 tracking-tight whitespace-nowrap">VSTEP</h1>
+            </div>
+            
+            <!-- Center Timer -->
+            <div id="timer-container" class="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 flex items-center gap-2 px-5 py-2 bg-slate-700/80 text-white rounded-xl shadow-lg backdrop-blur-md transition-all duration-500 border border-slate-600/50 hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-pulse-slow"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span id="timer-text" class="font-mono text-xl sm:text-2xl font-bold tracking-wider">00:00</span>
+            </div>
+
+            <!-- Right Tabs -->
+            <div class="flex bg-white/40 p-1.5 rounded-2xl border border-white/60 shadow-inner w-full md:w-auto justify-center">
+                <button id="tab-practice" onclick="switchTab('practice')" class="flex items-center gap-2 px-4 md:px-6 py-2 rounded-xl font-medium transition-all duration-300 bg-blue-600 text-white shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                    <span class="hidden sm:inline">Ôn Tập</span>
+                </button>
+                <button id="tab-config" onclick="switchTab('config')" class="flex items-center gap-2 px-4 md:px-6 py-2 rounded-xl font-medium transition-all duration-300 text-slate-700 hover:bg-white/60">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <span class="hidden sm:inline">Cấu Hình</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar relative">
+            
+            <!-- SECTION: PRACTICE -->
+            <div id="section-practice" class="w-full max-w-6xl mx-auto flex flex-col gap-4 sm:gap-6 animate-fade-in block">
+                
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/30 p-4 rounded-2xl border border-white/50">
+                    <div>
+                        <p class="text-sm font-semibold text-blue-600 tracking-wider uppercase mb-1">Dàn ý <span id="current-index-display">1</span> / <span id="total-templates-display">6</span></p>
+                        <h2 id="template-title" class="text-2xl sm:text-3xl font-extrabold text-slate-800">Title</h2>
+                    </div>
+                    <!-- Progress Bar mini -->
+                    <div id="progress-bar" class="flex gap-1 flex-wrap justify-end"></div>
+                </div>
+
+                <!-- Input Mode -->
+                <div id="practice-input-mode" class="flex flex-col gap-4">
+                    <div class="relative group">
+                        <!-- Tăng chiều cao lên 50vh - 60vh để gõ thoải mái trên Laptop -->
+                        <textarea
+                            id="user-input"
+                            oninput="updateWordCount()"
+                            placeholder="Đồng hồ sẽ tự động chạy khi bạn bắt đầu gõ. Gõ dàn ý của bạn vào đây..."
+                            class="w-full h-[45vh] lg:h-[55vh] p-6 rounded-2xl bg-white/70 border-2 border-white/80 shadow-inner focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-400/20 resize-none text-lg leading-relaxed text-slate-700 font-medium transition-all custom-scrollbar"
+                        ></textarea>
+                        <div id="word-count" class="absolute bottom-4 right-4 text-sm text-slate-500 font-bold bg-white/90 px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm transition-opacity" data-target="0">
+                            0 / 0 từ
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row justify-between items-center mt-1 gap-4">
+                        <p class="text-sm text-slate-600 bg-white/40 px-4 py-2 rounded-lg border border-white/60">
+                            💡 <span class="italic">Mẹo: Các từ nằm trong ngoặc vuông <strong class="text-blue-600">[ ]</strong> là vùng điền tự do, không bị tính lỗi sai.</span>
+                        </p>
+                        <button
+                            id="btn-check"
+                            onclick="handleCheck()"
+                            class="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-10 py-3 rounded-xl font-bold shadow-xl shadow-blue-500/30 transition-all transform hover:-translate-y-1 opacity-50 cursor-not-allowed"
+                            disabled
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            Kiểm Tra Kết Quả
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Result Mode -->
+                <div id="practice-result-mode" class="hidden flex-col gap-6">
+                    
+                    <!-- Result Box -->
+                    <div id="result-box" class="p-6 rounded-2xl border-2">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4 pb-4 border-b border-slate-200/50" id="result-header">
+                            <!-- Injected by JS -->
+                        </div>
+                        
+                        <!-- Diff Display -->
+                        <div id="diff-content" class="text-lg leading-relaxed font-medium whitespace-pre-wrap text-slate-700 p-6 bg-white/95 rounded-xl shadow-inner border border-slate-200 font-serif min-h-[30vh]">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-2">
+                        <button
+                            onclick="handleRetry()"
+                            class="w-full sm:w-auto flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-200 px-8 py-3 rounded-xl font-bold shadow-sm transition-all hover:border-slate-300"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                            Viết Lại Dàn Ý Này
+                        </button>
+                        <button
+                            id="btn-next"
+                            onclick="handleNext()"
+                            class="w-full sm:w-auto flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition-all transform hover:scale-105"
+                        >
+                            <span>Dàn Ý Tiếp Theo</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SECTION: CONFIG -->
+            <div id="section-config" class="w-full max-w-7xl mx-auto flex flex-col gap-6 hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 bg-white/30 p-5 rounded-2xl border border-white/50 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-blue-900">Quản Lý Dàn Ý Mẫu</h2>
+                        <p class="text-slate-600 mt-2 text-sm bg-white/50 inline-block px-3 py-1 rounded-md border border-white">Sử dụng ngoặc vuông <strong>[ ]</strong> để tạo vùng điền tự do (hệ thống sẽ bỏ qua vùng này khi chấm điểm).</p>
+                    </div>
+                    <div class="flex flex-wrap gap-3 w-full md:w-auto">
+                        <button 
+                            onclick="handleResetConfig()"
+                            class="flex-1 md:flex-none items-center justify-center flex gap-2 px-4 py-2.5 bg-white/60 hover:bg-white border border-slate-300 text-slate-700 rounded-xl font-bold transition-all text-sm shadow-sm"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                            Khôi Phục Gốc
+                        </button>
+                        <button 
+                            onclick="handleSaveConfig()"
+                            class="flex-1 md:flex-none items-center justify-center flex gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-500/30 transition-all text-sm"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                            Lưu Thay Đổi
+                        </button>
+                    </div>
+                </div>
+
+                <div id="config-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-10">
+                    <!-- Config items injected by JS -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Custom Modal (Message Box replacement for alert/confirm) -->
+    <div id="custom-modal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModal(false)"></div>
+        <!-- Modal Content -->
+        <div class="relative modal-glass p-8 rounded-3xl shadow-2xl max-w-md w-full mx-4 border border-white transform scale-95 transition-transform duration-300" id="custom-modal-content">
+            <div class="flex flex-col items-center text-center">
+                <div id="modal-icon" class="w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                    <!-- Icon injected via JS -->
+                </div>
+                <h3 id="modal-title" class="text-2xl font-bold text-slate-800 mb-2">Title</h3>
+                <p id="modal-message" class="text-slate-600 mb-8 leading-relaxed">Message</p>
+                
+                <div id="modal-buttons" class="flex gap-4 w-full">
+                    <!-- Buttons injected via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Mặc định
+        const defaultTemplates = [
+            {
+                id: 'email-thong-dung',
+                title: 'Email Thông Dụng',
+                content: `Dear [Người nhận],\nHow have you been? I hope you are doing well lately. Many thank for your last letter. I feel very happy to hear from you. I hope everything in your life is very wonderful. I am writing this email for the following things\nFirst of all 1. Sencondly 2. In addition 3. Moreover 4. Last but not least 5.\nThat is pretty much everything for now. Please drop me a line whenever you are free time, as I am eager to hear your thoughts.\nBest wishes,\nHenry`
+            },
+            {
+                id: 'email-feedback',
+                title: 'Email Feedback/Complain',
+                content: `Dear [Người nhận],\nI hope you are doing well lately. I have just used your service. I feel your service is rather good but there is still something that I want to discuss. Therefore, now I am writing this email to give my own feedback/ complain after using your service.\nFirst of all 1. Sencondly 2. In addition 3. Moreover 4. Last but not least 5.\nThat is all for my feedback / complain. I hope that with some of my suggestions, it can help you improve your service in the future. Let me know if you want to have any further and information. Thank you for your time and consideration.\nBest wishes,\n\nHenry`
+            },
+            {
+                id: 'essay-1-2-yeu-cau',
+                title: 'Essay Dạng 1 - 2 Yêu Cầu',
+                content: `In this day and age, [Chủ đề] has become one of the most concerned matters of many people. This essay will discuss clearly both [Vấn đề A] and [Vấn đề B] as well as give some reasons and examples to support the discussion before reaching a logical conclusion.\n\nThere are many main [Vấn đề A] of this matter. In the first place, the most important thing is that [Ý chính 1]. Second, another main thing is that [Ý chính 2]. Moreover, it is worth noting that [Ý chính 3]. Finally, [Ý chính 4]. These are some of the primary [Vấn đề A] of [Chủ đề].\n\nOn the other hand, this matter has some major [Vấn đề B] as follows. First of all, we cannot deny that [Ý chính 1]. Secondly, one of the main points is that [Ý chính 2]. In addition, [Ý chính 3]. In the end, [Ý chính 4]. These are some major [Vấn đề B] of [Chủ đề].\n\nTaking everything into consideration, besides some [Vấn đề A], there are several [Vấn đề B] of this matter discussed clearly in the essay above. From my point of view, [Ý kiến riêng].`
+            },
+            {
+                id: 'essay-1-1-yeu-cau',
+                title: 'Essay Dạng 1 - 1 Yêu Cầu',
+                content: `In this day and age, [Chủ đề] has become one of the most concerned matters of many people. This essay will discuss clearly [Vấn đề A] as well as give some reasons and examples to support the discussion before reaching a logical conclusion.\n\nThere are many main [Vấn đề A] of this matter. In the first place, the most important thing is that [Ý chính 1]. Second, another main thing is that [Ý chính 2].\n\nMoreover, it is worth noting that [Ý chính 3]. Finally, [Ý chính 4]. These are some of the primary [Vấn đề A] of [Chủ đề].\n\nTaking everything into consideration, there are several [Vấn đề A] of this matter discussed clearly in the essay above. From my point of view, [Ý kiến riêng].`
+            },
+            {
+                id: 'essay-2-1-quan-diem',
+                title: 'Essay Dạng 2 - 1 Quan Điểm',
+                content: `In this day and age, it is thought by many people that [1 Quan điểm]. From my point of view, I partly agree with this view due to some following reasons and examples that will be discussed in this essay.\n\nOn the one hand, I agree with this statement to a certain extent for several main reasons. In the first place, the most important thing is that [Agree 1]. Second, another main thing is that [Agree 2]. Moreover, it is worth noting that [Agree 3]. Finally, [Agree 4]. These are the primary reasons why I support this view.\n\nOn the other hand, there are some reasons for my disagreement with this view. First of all, we cannot deny that [Disagree 1]. Secondly, one of the main points is that [Disagree 2]. In addition, [Disagree 3]. In the end, it is clear that [Disagree 4]. These are the main reasons for my reservation about this view.\n\nTaking everything into consideration, it is undeniable that there are many different views about this matter. From my point of view, each individual has their own views due to two sides of this matter.`
+            },
+            {
+                id: 'essay-2-2-quan-diem',
+                title: 'Essay Dạng 2 - 2 Quan Điểm',
+                content: `In this day and age, it is thought by many people that [Chọn quan điểm thứ 1]. From my point of view, I partly agree with this view due to some following reasons and examples that will be discussed in this essay.\n\nOn the one hand, I agree with this statement to a certain extent for several main reasons. In the first place, the most important thing is that [Ý chính 1]. Second, another main thing is that [Ý chính 2]. Moreover, it is worth noting that [Ý chính 3]. Finally, [Ý chính 4]. These are the primary reasons why I support this view.\n\nOn the other hand, there are some reasons for my agreement with the second view. First of all, we cannot deny that [Ý chính 1]. Secondly, one of the main points is that [Ý chính 2]. In addition, [Ý chính 3]. In the end, it is clear that [Ý chính 4]. These are the main reasons for my agreement with the second view.\n\nTaking everything into consideration, it is undeniable that there are many different views about this matter. From my point of view, each individual has their own views due to two sides of this matter.`
+            },
+            // --- CÁC CÂU LÝ DO THÊM VÀO TỪ HÌNH ẢNH ---
+            { id: 'b1', title: 'I. Benefits - 1. Thư giãn', content: `It can help us relax and reduce stress. We can feel happy and comfortable. It is very important.` },
+            { id: 'b2', title: 'I. Benefits - 2. Kiến thức', content: `It can help us widen knowledge and learn a lot of new things. It is very useful and necessary for our work and study` },
+            { id: 'b3', title: 'I. Benefits - 3. Tìm thông tin nhanh', content: `It can help us find information quickly and easily. We can save time. It is very fast.` },
+            { id: 'b4', title: 'I. Benefits - 4. Thông tin chính xác', content: `It can help us know exact information. We will have a lot of reliable information. It is very useful` },
+            { id: 'b5', title: 'I. Benefits - 5. Kỹ năng', content: `It can help us learn a lot of necessary skills for work. It is also very important in our life` },
+            { id: 'b6', title: 'I. Benefits - 6. Kết bạn', content: `It can help us make friends with a lot of people. We can learn a lot of useful things from them. It is very good` },
+            { id: 'b7', title: 'I. Benefits - 7. Sức khỏe', content: `It can help us keep healthy and prevent sicknesses. It is very useful and good for health` },
+            { id: 'b8', title: 'I. Benefits - 8. Giữ dáng', content: `It can help us keep fit and have a good shape. It is very good for us. We will feel more confident` },
+            { id: 'b9', title: 'I. Benefits - 9. Môi trường', content: `It can help us protect the environment. It is very important and necessary for our life` },
+            { id: 'b10', title: 'I. Benefits - 10. Tiết kiệm tiền', content: `It can help us save a lot of money. We will not pay a lot of money for it. It is very suitable for many people` },
+            { id: 'b11', title: 'I. Benefits - 11. Kiếm tiền', content: `It can help us make a lot of money. We will have a better life. It is very important with everyone` },
+            { id: 'b12', title: 'I. Benefits - 12. Tiết kiệm thời gian', content: `It can help us save a lot of time because it is very fast. We will not spend a lot of time on it. It is very useful` },
+            { id: 'b13', title: 'I. Benefits - 13. Nhiều cơ hội việc làm', content: `It can help us have a lot of good jobs in the future easily. We can work in many places. It is very important` },
+            { id: 'b14', title: 'I. Benefits - 14. Học tập tốt hơn', content: `It can help us study better. It is very necessary and important in our study` },
+            { id: 'b15', title: 'I. Benefits - 15. Làm việc tốt hơn', content: `It can help us work better. It is very necessary and important in our work.` },
+            { id: 'b16', title: 'I. Benefits - 16. Tự do', content: `It can help us feel free and comfortable. We can do anything that we want. We will not depend on anyone` },
+            { id: 'b17', title: 'I. Benefits - 17. Quyền lựa chọn', content: `It can help everyone have the right to choose. It is suitable for our ability and the hobbies.` },
+            { id: 'b18', title: 'I. Benefits - 18. Giảm kẹt xe', content: `It can help us reduce traffic jams. We will save time when we go out. It is very important` },
+            { id: 'b19', title: 'I. Benefits - 19. Giảm tai nạn', content: `It can help us reduce traffic accidents. We will feel safe when we go out. It is very useful.` },
+            { id: 'b20', title: 'I. Benefits - 20. Phát triển kinh tế', content: `It can help us develop the economy. It is very important and necessary` },
+            { id: 'b21', title: 'I. Benefits - 21. Tạo việc làm', content: `It can help us create a lot of jobs for everyone. It is very necessary` },
+            { id: 'b22', title: 'I. Benefits - 22. Tránh mâu thuẫn', content: `It can help us avoid a lot of conflicts. We will not feel stressed` },
+            { id: 'b23', title: 'I. Benefits - 23. An toàn', content: `It can help us feel safe. We can avoid some problems. It is very useful` },
+            { id: 'b24', title: 'I. Benefits - 24. Tiện lợi', content: `It can bring a lot of benefits for us. We cannot deny its importance in our life.` },
+            { id: 'd25', title: 'II. Drawbacks - 25. Ảnh hưởng sức khỏe', content: `It can affect our health. It is not good for our health and it can cause a lot of sicknesses. It is very dangerous` },
+            { id: 'd26', title: 'II. Drawbacks - 26. Ảnh hưởng công việc/học', content: `It can affect our study / work. It is very bad for our study / work` },
+            { id: 'd27', title: 'II. Drawbacks - 27. Thông tin không chính xác', content: `It will not provide exact information. We cannot know a lot of reliable information. It is very harmful` },
+            { id: 'd28', title: 'II. Drawbacks - 28. Lãng phí thời gian', content: `It will spend a lot of time. We will not have a lot of time to do other useful things. It is very bad` },
+            { id: 'd29', title: 'II. Drawbacks - 29. Tốn tiền', content: `It will cost a lot of money. We must pay a lot of money for it because it is very expensive` },
+            { id: 'd30', title: 'II. Drawbacks - 30. Ồn ào, đông đúc', content: `It is very noisy and crowded. it will make us feel uncomfortable` },
+            { id: 'd31_1', title: 'II. Drawbacks - 31. Ô nhiễm (1)', content: `It will cause the environment pollution. It will affect health of people. it is very dangerous` },
+            { id: 'd31_2', title: 'II. Drawbacks - 31. Ô nhiễm (2)', content: `The environment pollution will cause this problem. It is very serious` },
+            { id: 'd32', title: 'II. Drawbacks - 32. Gây vấn đề môi trường', content: `It will cause a lot of environment problems such as the climate change, the greenhouse effect, the global warming. It is very serious / will cause this problem. It is very serious` },
+            { id: 'd33', title: 'II. Drawbacks - 33. Bị lừa', content: `We can be cheated. We can lose a lot of important things. It is very dangerous` },
+            { id: 'd34', title: 'II. Drawbacks - 34. Mất thông tin', content: `We can lose a lot of important things such as personal information, even we can lose a lot of money. It is very serious` },
+            { id: 'd35_1', title: 'II. Drawbacks - 35. Bùng nổ dân số (1)', content: `Overpopulation can cause this problem. It is very serious and can cause a lot of problems` },
+            { id: 'd35_2', title: 'II. Drawbacks - 35. Bùng nổ dân số (2)', content: `It can cause overpopulation. It is very serious and can cause a lot of problems` },
+            { id: 'd36', title: 'II. Drawbacks - 36. Gây vấn đề xã hội', content: `It will cause a lot of problems in society such as traffic jams, traffic accidents, unemployment, lack of houses, so on. It is very serious.` },
+            { id: 'd37', title: 'II. Drawbacks - 37. Gây mâu thuẫn', content: `It will cause a lot of conflicts because there are a lot of different thinkings. We will feel stressed. It is uncomfortable` },
+            { id: 'd38', title: 'II. Drawbacks - 38. Buồn/cô đơn', content: `It will make us feel sad and lonely. We feel stressed` },
+            { id: 'd39', title: 'II. Drawbacks - 39. Phụ thuộc vào người khác', content: `It will make us depend on other people. We will feel uncomfortable. It is very inconvenient` },
+            { id: 'd40', title: 'II. Drawbacks - 40. Phụ thuộc vào thiết bị', content: `It will make us depend on it/ the device. We have to use it whenever we study / work. It is very inconvenient` },
+            { id: 'd41', title: 'II. Drawbacks - 41. Rủi ro/nguy hiểm', content: `It can cause some risks for us. We will feel unsafe. It can affect our health.` },
+            { id: 'd42', title: 'II. Drawbacks - 42. Bất lợi', content: `It can cause a lot of disadvantages for us. We cannot deny a lot of drawbacks that it can cause in our life.` },
+            { id: 'c43', title: 'III. Causes - 43. Thức ăn không tốt', content: `We eat a lot of unhealthy foods. We eat a lot of fast foods such as pizza, fried food, milk tea, so on. it can make us fat and cause a lot of sicknesses.` },
+            { id: 'c44', title: 'III. Causes - 44. Thói quen không tốt', content: `We have a lot of unhealthy habits. We do not usually exercise, play sports. We usually stay up late. It can make us fat and cause a lot of sicknesses` },
+            { id: 'c45', title: 'III. Causes - 45. Ba mẹ không có thời gian', content: `parents do not have a lot of time in order to take care of their children. They will lack love and cannot share with their parents` },
+            { id: 'c46', title: 'III. Causes - 46. Hành động xấu', content: `We can copy bad actions of some bad friends such as smoking, drinking, using bad words, crimes, so on.` },
+            { id: 'c47', title: 'III. Causes - 47. Vi phạm pháp luật', content: `Some people break the laws. It will cause many serious problems` },
+            { id: 'c48', title: 'III. Causes - 48. Giao thông tệ', content: `The traffic system is bad. A lot of streets are very small and hard to move. It can cause traffic accidents and traffic jams` },
+            { id: 's49', title: 'IV. Solutions - 49. Trồng cây', content: `We should plant a lot of trees in many places. We can plant trees in the parks, the school yards, along the streets, so on. it will help us create the fresh air.` },
+            { id: 's50', title: 'IV. Solutions - 50. Dùng giao thông công cộng', content: `Everyone should use public transport. They can use buses instead of a lot of private transport such as motorbikes, cars to reduce smoke, dust in the air.` },
+            { id: 's51', title: 'IV. Solutions - 51. Bảo vệ môi trường', content: `We should protect the environment. It can help us solve this problem. It is very necessary.` },
+            { id: 's52', title: 'IV. Solutions - 52. Thức ăn tốt', content: `people should eat a lot of healthy foods. We should eat a lot of vegetables, fruits, fish, so on. it can help us keep healthy and prevent a lot of sicknesses` },
+            { id: 's53', title: 'IV. Solutions - 53. Tránh thói quen xấu', content: `People should avoid a lot of unhealthy habits. We should not stay up late, drink beer, eat a lot of fast food. It can cause a lot of sicknesses.` },
+            { id: 's54', title: 'IV. Solutions - 54. Tiết kiệm điện/nước', content: `We should save water / electricity. We should turn off when not in use. It can help us protect the environent and save a lot of money.` },
+            { id: 's55', title: 'IV. Solutions - 55. Giải pháp (Chung)', content: `Everyone should raise awareness about this problem. We should consider carefully disadvantages that it can cause so that we can find a lot of ways to prevent it.` },
+            { id: 's56', title: 'IV. Solutions - 56. Chính phủ ra luật', content: `The government should pass the laws to solve this problem. It will help us have a safe life and it can protect everyone` },
+            { id: 's57', title: 'IV. Solutions - 57. Chính phủ phạt', content: `The government should fine bad people when they break the laws. They should fine a lot of money. They will feel afraid and will not do again` },
+            { id: 's58', title: 'IV. Solutions - 58. Chính phủ tạo việc làm', content: `The government should create a lot of jobs for everyone, especially young people in many places. When they have a good job, they will not go to work in far places.` },
+            { id: 's59', title: 'IV. Solutions - 59. Chính phủ cải thiện giao thông', content: `The government should improve the traffic system. They can widen streets, build public transport, so on. It can help us reduce traffic accidents and traffic jam` },
+            { id: 's60', title: 'IV. Solutions - 60. Ba mẹ giành thời gian', content: `Parents should spend a lot of time for their children. They should take care of many things in life with their children and find the best solutions for their children.` },
+            { id: 's61', title: 'IV. Solutions - 61. Ba mẹ có nhiều hoạt động với con', content: `Parents should encourage their children to take part in useful activities. Parents and children can join in a lot of activities together. They can play sports, go swimming, go camping, travel.` }
+        ];
+
+        // State variables
+        let templates = [];
+        let currentIndex = 0;
+        let activeTab = 'practice';
+        
+        // Timer variables
+        let timerInterval = null;
+        let timeRemaining = 0;
+        let timerStarted = false;
+
+        // Custom Modal Logic
+        let modalConfirmCallback = null;
+
+        function showModal(title, message, type = 'info', onConfirm = null) {
+            const modal = document.getElementById('custom-modal');
+            const modalContent = document.getElementById('custom-modal-content');
+            const titleEl = document.getElementById('modal-title');
+            const msgEl = document.getElementById('modal-message');
+            const iconEl = document.getElementById('modal-icon');
+            const btnsEl = document.getElementById('modal-buttons');
+
+            titleEl.innerText = title;
+            msgEl.innerText = message;
+            modalConfirmCallback = onConfirm;
+
+            // Setup Icon based on type
+            if (type === 'info' || type === 'timeout') {
+                iconEl.className = "w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-blue-100 text-blue-600";
+                iconEl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`;
+            } else if (type === 'confirm' || type === 'delete') {
+                iconEl.className = "w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-amber-100 text-amber-600";
+                iconEl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+            }
+
+            // Setup Buttons
+            btnsEl.innerHTML = '';
+            if (type === 'info' || type === 'timeout') {
+                const btnOk = document.createElement('button');
+                btnOk.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors";
+                btnOk.innerText = "Đã hiểu";
+                btnOk.onclick = () => closeModal(true);
+                btnsEl.appendChild(btnOk);
+            } else if (type === 'confirm' || type === 'delete') {
+                const btnCancel = document.createElement('button');
+                btnCancel.className = "w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-xl transition-colors";
+                btnCancel.innerText = "Hủy";
+                btnCancel.onclick = () => closeModal(false);
+                
+                const btnConfirm = document.createElement('button');
+                const btnColor = type === 'delete' ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700';
+                btnConfirm.className = `w-1/2 ${btnColor} text-white font-bold py-3 px-6 rounded-xl transition-colors`;
+                btnConfirm.innerText = type === 'delete' ? "Xóa" : "Xác nhận";
+                btnConfirm.onclick = () => closeModal(true);
+                
+                btnsEl.appendChild(btnCancel);
+                btnsEl.appendChild(btnConfirm);
+            }
+
+            // Show Modal
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-95');
+            modalContent.classList.add('scale-100');
+        }
+
+        function closeModal(isConfirm) {
+            const modal = document.getElementById('custom-modal');
+            const modalContent = document.getElementById('custom-modal-content');
+            
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.add('scale-95');
+            modalContent.classList.remove('scale-100');
+
+            if (isConfirm && modalConfirmCallback) {
+                // Đợi animation chạy xong mới gọi callback
+                setTimeout(() => {
+                    modalConfirmCallback();
+                    modalConfirmCallback = null;
+                }, 300);
+            }
+        }
+
+        // Xác định thời gian dựa vào tiêu đề hoặc ID
+        function getTemplateDuration(template) {
+            const id = template.id.toLowerCase();
+            const title = template.title.toLowerCase();
+            
+            if (id.includes('email') || title.includes('email')) {
+                return 7 * 60; // 7 phút
+            } else if (id.includes('essay') || title.includes('essay')) {
+                return 15 * 60; // 15 phút
+            } else {
+                return 3 * 60; // 3 phút mặc định cho các câu ngắn
+            }
+        }
+
+        function formatTime(totalSeconds) {
+            const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+            const s = (totalSeconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function startTimer() {
+            if (timerStarted) return;
+            timerStarted = true;
+            
+            // Xóa hiệu ứng chờ
+            const timerContainer = document.getElementById('timer-container');
+            const icon = timerContainer.querySelector('svg');
+            icon.classList.remove('animate-pulse-slow');
+            timerContainer.classList.add('ring-2', 'ring-blue-400', 'ring-offset-2', 'ring-offset-blue-50');
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerUI();
+                
+                if (timeRemaining <= 0) {
+                    stopTimer();
+                    document.getElementById('user-input').setAttribute('disabled', 'true');
+                    showModal('Hết giờ!', 'Đã hết thời gian quy định cho dàn ý này. Hệ thống sẽ tự động chấm điểm.', 'timeout', handleCheck);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerStarted = false;
+        }
+
+        function resetTimer() {
+            stopTimer();
+            if(templates.length > 0) {
+                timeRemaining = getTemplateDuration(templates[currentIndex]);
+            } else {
+                timeRemaining = 0;
+            }
+            updateTimerUI(true);
+        }
+
+        function updateTimerUI(isInitial = false) {
+            const display = document.getElementById('timer-text');
+            const container = document.getElementById('timer-container');
+            const icon = container.querySelector('svg');
+            
+            display.innerText = formatTime(timeRemaining);
+
+            if (isInitial) {
+                // Trạng thái ban đầu
+                container.className = "md:absolute md:left-1/2 md:transform md:-translate-x-1/2 flex items-center gap-2 px-5 py-2 bg-slate-700/80 text-white rounded-xl shadow-lg backdrop-blur-md transition-all duration-500 border border-slate-600/50";
+                icon.classList.add('animate-pulse-slow');
+                if (activeTab === 'practice') {
+                    container.classList.remove('hidden');
+                }
+            } else {
+                // Nhấp nháy đỏ khi còn < 1 phút
+                if (timeRemaining <= 60 && timeRemaining > 0) {
+                    container.classList.remove('bg-slate-700/80', 'ring-blue-400');
+                    container.classList.add('bg-red-600', 'animate-pulse', 'ring-red-400');
+                }
+            }
+        }
+
+        // Standard helpers
+        function normalizeString(word) {
+            return word.replace(/[^\w\u00C0-\u1EF9]/gi, '').toLowerCase();
+        }
+
+        function getWordCount(text) {
+            const noBrackets = text.replace(/\[.*?\]/g, '');
+            const wordsArray = noBrackets.split(/[\s\n]+/).filter(w => normalizeString(w) !== '');
+            return wordsArray.length;
+        }
+
+        function init() {
+            const saved = localStorage.getItem('vstep-templates');
+            if (saved) {
+                try {
+                    templates = JSON.parse(saved);
+                    let needsSave = false;
+                    defaultTemplates.forEach(defTpl => {
+                        if (!templates.find(t => t.id === defTpl.id)) {
+                            templates.push(defTpl);
+                            needsSave = true;
+                        }
+                    });
+                    if (needsSave) {
+                        localStorage.setItem('vstep-templates', JSON.stringify(templates));
+                    }
+                } catch (e) {
+                    templates = JSON.parse(JSON.stringify(defaultTemplates));
+                }
+            } else {
+                templates = JSON.parse(JSON.stringify(defaultTemplates));
+            }
+            loadPracticeTemplate();
+            renderConfigList();
+        }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            
+            const btnPractice = document.getElementById('tab-practice');
+            const btnConfig = document.getElementById('tab-config');
+            const secPractice = document.getElementById('section-practice');
+            const secConfig = document.getElementById('section-config');
+            const timerContainer = document.getElementById('timer-container');
+
+            if (tab === 'practice') {
+                btnPractice.className = "flex items-center gap-2 px-4 md:px-6 py-2 rounded-xl font-medium transition-all duration-300 bg-blue-600 text-white shadow-md";
+                btnConfig.className = "flex items-center gap-2 px-4 md:px-6 py-2 rounded-xl font-medium transition-all duration-300 text-slate-700 hover:bg-white/60";
+                secPractice.classList.remove('hidden');
+                secPractice.classList.add('flex');
+                secConfig.classList.add('hidden');
+                secConfig.classList.remove('flex');
+                timerContainer.classList.remove('hidden');
+                
+                if(currentIndex >= templates.length) currentIndex = 0;
+                loadPracticeTemplate();
+            } else {
+                btnPractice.className = "flex items-center gap-2 px-4 md:px-6 py-2 rounded-xl font-medium transition-all duration-300 text-slate-700 hover:bg-white/60";
+                btnConfig.className = "flex items-center gap-2 px-4 md:px-6 py-2 rounded-xl font-medium transition-all duration-300 bg-blue-600 text-white shadow-md";
+                secPractice.classList.add('hidden');
+                secPractice.classList.remove('flex');
+                secConfig.classList.remove('hidden');
+                secConfig.classList.add('flex');
+                
+                // Hide and pause timer in config mode
+                timerContainer.classList.add('hidden');
+                stopTimer();
+                renderConfigList(); 
+            }
+        }
+
+        function loadPracticeTemplate() {
+            if(templates.length === 0) {
+                document.getElementById('template-title').innerText = "Chưa có dữ liệu";
+                document.getElementById('current-index-display').innerText = 0;
+                document.getElementById('total-templates-display').innerText = 0;
+                document.getElementById('user-input').setAttribute('disabled', 'true');
+                document.getElementById('progress-bar').innerHTML = '';
+                document.getElementById('timer-container').classList.add('hidden');
+                return;
+            } else {
+                document.getElementById('user-input').removeAttribute('disabled');
+            }
+
+            document.getElementById('current-index-display').innerText = currentIndex + 1;
+            document.getElementById('total-templates-display').innerText = templates.length;
+            document.getElementById('template-title').innerText = templates[currentIndex].title;
+            
+            // Reset and configure timer for this specific template
+            resetTimer();
+
+            // Progress Bar
+            const maxDots = 20; 
+            const progressContainer = document.getElementById('progress-bar');
+            progressContainer.innerHTML = '';
+            
+            let startDot = 0;
+            let endDot = templates.length;
+            
+            if (templates.length > maxDots) {
+                startDot = Math.max(0, currentIndex - Math.floor(maxDots/2));
+                endDot = Math.min(templates.length, startDot + maxDots);
+                if (endDot - startDot < maxDots) {
+                    startDot = Math.max(0, endDot - maxDots);
+                }
+            }
+
+            for (let i = startDot; i < endDot; i++) {
+                const div = document.createElement('div');
+                div.className = `h-2 w-2 md:w-3 rounded-full transition-all ${i === currentIndex ? 'bg-blue-600 scale-125' : (i < currentIndex ? 'bg-blue-400' : 'bg-white/60')}`;
+                div.title = `Bài ${i+1}`;
+                progressContainer.appendChild(div);
+            }
+
+            const btnNextText = currentIndex < templates.length - 1 ? 'Dàn Ý Tiếp Theo' : 'Quay Lại Từ Đầu';
+            document.querySelector('#btn-next span').innerText = btnNextText;
+
+            const currentTemplateWords = getWordCount(templates[currentIndex].content);
+            document.getElementById('word-count').setAttribute('data-target', currentTemplateWords);
+
+            // Reset input and view
+            document.getElementById('user-input').value = '';
+            updateWordCount();
+            
+            document.getElementById('practice-input-mode').classList.remove('hidden');
+            document.getElementById('practice-input-mode').classList.add('flex');
+            document.getElementById('practice-result-mode').classList.add('hidden');
+            document.getElementById('practice-result-mode').classList.remove('flex');
+            
+            // Auto focus
+            setTimeout(() => document.getElementById('user-input').focus(), 100);
+        }
+
+        function updateWordCount() {
+            const val = document.getElementById('user-input').value;
+            const words = getWordCount(val);
+            const targetWords = document.getElementById('word-count').getAttribute('data-target') || 0;
+            
+            document.getElementById('word-count').innerText = `${words} / ${targetWords} từ`;
+            
+            // Start timer immediately upon first keystroke
+            if (!timerStarted && val.trim().length > 0) {
+                startTimer();
+            }
+            
+            const btnCheck = document.getElementById('btn-check');
+            if (val.trim().length > 0) {
+                btnCheck.removeAttribute('disabled');
+                btnCheck.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                btnCheck.setAttribute('disabled', 'true');
+                btnCheck.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        function tokenize(text) {
+            const regex = /(\[.*?\]|[\s\n]+)/;
+            return text.split(regex).filter(Boolean).map(part => {
+                if (/^\[.*?\]$/.test(part)) return { text: part, type: 'placeholder' };
+                if (/^[\s\n]+$/.test(part)) return { text: part, type: 'space' };
+                return { text: part, type: 'word' };
+            });
+        }
+
+        function computeDiffAdvanced(expected, actual) {
+            const expTokens = tokenize(expected);
+            const expWords = [];
+
+            expTokens.forEach(t => {
+                if (t.type === 'word') {
+                    t.norm = normalizeString(t.text);
+                    if (t.norm === '') {
+                        t.type = 'punctuation';
+                    } else {
+                        t.matched = false;
+                        expWords.push(t);
+                    }
+                }
+            });
+
+            const actTokens = tokenize(actual);
+            const actWords = [];
+            actTokens.forEach(t => {
+                if (t.type === 'word' || t.type === 'placeholder') {
+                    const norm = normalizeString(t.text);
+                    if (norm !== '') actWords.push(norm);
+                }
+            });
+
+            const m = expWords.length;
+            const n = actWords.length;
+            const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+
+            for (let i = 1; i <= m; i++) {
+                for (let j = 1; j <= n; j++) {
+                    if (expWords[i - 1].norm === actWords[j - 1]) {
+                        dp[i][j] = dp[i - 1][j - 1] + 1;
+                    } else {
+                        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                    }
+                }
+            }
+
+            let i = m, j = n;
+            while (i > 0 && j > 0) {
+                if (expWords[i - 1].norm === actWords[j - 1]) {
+                    expWords[i - 1].matched = true;
+                    i--;
+                    j--;
+                } else if (dp[i - 1][j] >= dp[i][j - 1]) {
+                    i--;
+                } else {
+                    j--;
+                }
+            }
+
+            const errors = expWords.filter(t => !t.matched).length;
+            return { elements: expTokens, errorCount: errors };
+        }
+
+        function handleCheck() {
+            const userInput = document.getElementById('user-input').value;
+            // Stop timer when checking
+            stopTimer();
+
+            const templateContent = templates[currentIndex].content;
+            const result = computeDiffAdvanced(templateContent, userInput);
+
+            renderDiffResult(result);
+
+            document.getElementById('practice-input-mode').classList.add('hidden');
+            document.getElementById('practice-input-mode').classList.remove('flex');
+            document.getElementById('practice-result-mode').classList.remove('hidden');
+            document.getElementById('practice-result-mode').classList.add('flex');
+        }
+
+        function renderDiffResult(result) {
+            const resultBox = document.getElementById('result-box');
+            const resultHeader = document.getElementById('result-header');
+            const diffContent = document.getElementById('diff-content');
+
+            if (result.errorCount === 0) {
+                resultBox.className = "p-6 rounded-2xl border-2 bg-green-50 border-green-200";
+                resultHeader.innerHTML = `
+                    <div class="bg-green-100 p-3 rounded-full text-green-600 shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-green-700">Xuất sắc! Outline của bạn rất chuẩn xác.</h3>
+                        <p class="text-sm text-green-600 mt-1">Đã hoàn thành trước khi hết giờ. Bạn đã gõ đúng toàn bộ các Keyword chính.</p>
+                    </div>
+                `;
+            } else {
+                resultBox.className = "p-6 rounded-2xl border-2 bg-white/90 border-red-200";
+                resultHeader.innerHTML = `
+                    <div class="bg-red-100 p-3 rounded-full text-red-500 shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-red-600">Phát hiện ${result.errorCount} từ bị sai hoặc thiếu sót.</h3>
+                        <p class="text-sm text-slate-500 mt-1">Hệ thống bôi đỏ chính xác những từ bị thiếu hoặc sai so với mẫu gốc.</p>
+                    </div>
+                `;
+            }
+
+            let htmlStr = '';
+            result.elements.forEach(el => {
+                const text = el.text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                if (el.type === 'space') {
+                    htmlStr += text; 
+                } else if (el.type === 'punctuation') {
+                    htmlStr += `<span class="text-slate-800">${text}</span>`;
+                } else if (el.type === 'placeholder') {
+                    htmlStr += `<span class="text-blue-700 font-bold bg-blue-100/50 px-1 mx-[1px] rounded inline-block shadow-sm border border-blue-200">${text}</span>`;
+                } else if (el.type === 'word') {
+                    if (el.matched) {
+                        htmlStr += `<span class="text-slate-800">${text}</span>`;
+                    } else {
+                        htmlStr += `<span class="inline-block bg-red-100 text-red-700 font-bold border-b-[3px] border-red-500 mx-[1px] px-1 rounded-sm cursor-help transition-all hover:bg-red-200" title="Từ này bị sai hoặc thiếu">${text}</span>`;
+                    }
+                }
+            });
+            diffContent.innerHTML = htmlStr;
+        }
+
+        function handleRetry() {
+            resetTimer();
+            document.getElementById('user-input').removeAttribute('disabled');
+            document.getElementById('practice-input-mode').classList.remove('hidden');
+            document.getElementById('practice-input-mode').classList.add('flex');
+            document.getElementById('practice-result-mode').classList.add('hidden');
+            document.getElementById('practice-result-mode').classList.remove('flex');
+            document.getElementById('user-input').focus();
+        }
+
+        function handleNext() {
+            if (currentIndex < templates.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            loadPracticeTemplate();
+        }
+
+        function renderConfigList() {
+            const container = document.getElementById('config-list');
+            container.innerHTML = '';
+            
+            const addDiv = document.createElement('div');
+            addDiv.className = "bg-blue-50/70 p-6 rounded-2xl shadow-sm border-2 border-blue-200 border-dashed flex flex-col justify-center items-center min-h-[220px] cursor-pointer hover:bg-blue-100 transition-all hover:scale-[1.02] transform";
+            addDiv.onclick = handleAddNewTemplate;
+            addDiv.innerHTML = `
+                <div class="bg-blue-600 text-white p-4 rounded-full mb-4 shadow-lg shadow-blue-500/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <h3 class="font-bold text-blue-800 text-lg">Thêm Dàn Ý / Câu Mới</h3>
+            `;
+            container.appendChild(addDiv);
+
+            templates.forEach((template, index) => {
+                const div = document.createElement('div');
+                div.className = "bg-white/80 p-5 rounded-2xl shadow-md border border-white focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-transparent transition-all relative group flex flex-col h-full";
+                
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-3 gap-2">
+                        <input type="text" value="${template.title}" 
+                            class="font-bold text-slate-800 bg-white/50 rounded-lg border-transparent hover:border-slate-300 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 w-full px-2 py-1 transition-all"
+                            onchange="updateTemplateTitle(${index}, this.value)"
+                            placeholder="Tên dàn ý..."
+                        />
+                        <button onclick="handleDeleteTemplate(${index})" class="text-red-400 hover:text-red-600 p-2 bg-red-50 hover:bg-red-100 rounded-lg opacity-100 md:opacity-0 group-hover:opacity-100 transition-all" title="Xóa dàn ý này">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                        </button>
+                    </div>
+                    <textarea 
+                        id="config-textarea-${index}"
+                        class="w-full flex-1 min-h-[160px] p-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:border-blue-400 resize-none text-sm leading-relaxed text-slate-700 font-serif custom-scrollbar"
+                        oninput="updateTemplateContent(${index}, this.value)"
+                        placeholder="Nội dung dàn ý..."
+                    >${template.content}</textarea>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function updateTemplateTitle(index, newTitle) {
+            templates[index].title = newTitle;
+        }
+
+        function updateTemplateContent(index, newValue) {
+            templates[index].content = newValue;
+        }
+        
+        function handleAddNewTemplate() {
+            const newId = 'custom-' + Date.now();
+            templates.unshift({
+                id: newId,
+                title: 'Dàn ý mới',
+                content: ''
+            });
+            renderConfigList();
+        }
+
+        function handleDeleteTemplate(index) {
+            showModal(
+                'Xác nhận xóa', 
+                `Bạn có chắc chắn muốn xóa dàn ý "${templates[index].title}" không? Hành động này không thể hoàn tác.`, 
+                'delete', 
+                () => {
+                    templates.splice(index, 1);
+                    renderConfigList();
+                }
+            );
+        }
+
+        function handleSaveConfig() {
+            templates = templates.filter(t => t.title.trim() !== '' && t.content.trim() !== '');
+            localStorage.setItem('vstep-templates', JSON.stringify(templates));
+            showModal('Thành công!', 'Đã lưu cấu hình các dàn ý thành công vào trình duyệt của bạn.', 'info');
+            renderConfigList(); 
+        }
+
+        function handleResetConfig() {
+            showModal(
+                'Khôi phục mặc định', 
+                "Bạn có chắc muốn khôi phục toàn bộ dàn ý về mặc định ban đầu không? Mọi dàn ý thêm mới và chỉnh sửa của bạn sẽ bị mất hoàn toàn.", 
+                'confirm',
+                () => {
+                    templates = JSON.parse(JSON.stringify(defaultTemplates));
+                    localStorage.removeItem('vstep-templates');
+                    renderConfigList();
+                }
+            );
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
