@@ -82,12 +82,14 @@
             <!-- SECTION: PRACTICE -->
             <div id="section-practice" class="w-full max-w-6xl mx-auto flex flex-col animate-fade-in block">
                 
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white/30 p-4 rounded-2xl border border-white/50">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white/30 p-4 rounded-2xl border border-white/50 gap-4 mb-4">
                     <div>
                         <h2 id="template-title" class="text-2xl sm:text-3xl font-extrabold text-slate-800">Title</h2>
+                        <!-- ĐÃ FIX: Bổ sung ID word-count để JS không bị crash -->
+                      <!--    <div id="word-count" data-target="0" class="text-sm font-semibold text-blue-700 mt-2 bg-blue-100/50 inline-block px-3 py-1 rounded-lg border border-blue-200 shadow-sm">0 / 0 từ</div> -->
                     </div>
-                    <!-- Progress Bar mini -->
-                    
+                    <!-- ĐÃ FIX: Bổ sung ID progress-bar để JS hiển thị thanh tiến độ -->
+                    <!--  <div id="progress-bar" class="flex items-center gap-1.5 flex-wrap"></div> -->
                 </div>
 
                 <!-- Input Mode -->
@@ -208,10 +210,10 @@
         // Data Mặc định đã tích hợp thời gian (duration)
         const defaultTemplates = [
            { id: 'email-thong-dung', duration: 5, title: 'Email: Thông Dụng', content: `Dear [Người nhận],\nHow have you been? I hope you are doing well lately. Many thank for your last letter. I feel very happy to hear from you. I hope everything in your life is very wonderful. I am writing this email for the following things\nFirst of all 1. Sencondly 2. In addition 3. Moreover 4. Last but not least 5.\nThat is pretty much everything for now. Please drop me a line whenever you are free time, as I am eager to hear your thoughts.\nBest wishes,\nHenry` },
- { id: 'email-feedback', duration: 5, title: 'Email: Feedback/Complain', content: `Dear [Người nhận],\nI hope you are doing well lately. I have just used your service. I feel your service is rather good but there is still something that I want to discuss. Therefore, now I am writing this email to give my own feedback/ complain after using your service.\nFirst of all 1. Sencondly 2. In addition 3. Moreover 4. Last but not least 5.\nThat is all for my feedback / complain. I hope that with some of my suggestions, it can help you improve your service in the future. Let me know if you want to have any further and information. Thank you for your time and consideration.\nBest wishes,\n\nHenry` },
- { id: 'essay-1-21-yeu-cau', duration: 10, title: 'Essay Dạng 1: 2/1 Yêu Cầu', content: `In this day and age, [Chủ đề] has become one of the most concerned matters of a lot of people. This essay will discuss clearly both [Vấn đề A] and [Vấn đề B] as well as give some reasons and examples to support the discussion before reaching a logical conclusion.\n\nThere are many main [Vấn đề A] of this matter. In the first place, the most important thing is that [Ý chính 1]. Second, another main thing is that [Ý chính 2]. Moreover, it is worth noting that [Ý chính 3]. Finally, [Ý chính 4]. These are some of the primary [Vấn đề A] of [Chủ đề].\n\nOn the other hand, this matter has some major [Vấn đề B] as follows. First of all, we cannot deny that [Ý chính 1]. Secondly, one of the main points is that [Ý chính 2]. In addition, [Ý chính 3]. In the end, [Ý chính 4]. These are some major [Vấn đề B] of [Chủ đề].\n\nTaking everything into consideration, besides some [Vấn đề A] and there are several [Vấn đề B] of this matter discussed clearly in the essay above. From my point of view, [Ý kiến riêng].` },
- { id: 'essay-2-12-quan-diem', duration: 10, title: 'Essay Dạng 2: 1/2 Quan Điểm', content: `In this day and age, it is thought by a lot of people that [1 Quan điểm]. From my point of view, I partly agree with this view due to some following reasons and examples that will be discussed in this essay.\n\nOn the one hand, I agree with this statement to a certain extent for several main reasons. In the first place, the most important thing is that [Agree 1]. Second, another main thing is that [Agree 2]. Moreover, it is worth noting that [Agree 3]. Finally, [Agree 4]. These are the primary reasons why I support this view.\n\nOn the other hand, there are some reasons for my disagreement with this view. First of all, we cannot deny that [Disagree / Agree 1]. Secondly, one of the main points is that [Disagree / Agree 2]. In addition, [Disagree / Agree 3]. In the end, [Disagree / Agree 4]. These are the main reasons for my reservation about this view.\n\nTaking everything into consideration, it is undeniable that there are a lot of different views about this matter. From my point of view, I think people have their own views because there are two sides to this issue.` },
- // CÁC CÂU LÝ DO THÊM VÀO TỪ HÌNH ẢNH
+            { id: 'email-feedback', duration: 5, title: 'Email: Feedback/Complain', content: `Dear [Người nhận],\nI hope you are doing well lately. I have just used your service. I feel your service is rather good but there is still something that I want to discuss. Therefore, now I am writing this email to give my own feedback/ complain after using your service.\nFirst of all 1. Sencondly 2. In addition 3. Moreover 4. Last but not least 5.\nThat is all for my feedback / complain. I hope that with some of my suggestions, it can help you improve your service in the future. Let me know if you want to have any further information. Thank you for your time and consideration.\nBest wishes,\n\nHenry` },
+            { id: 'essay-1-21-yeu-cau', duration: 10, title: 'Essay Dạng 1: 2/1 Yêu Cầu', content: `In this day and age, [Chủ đề] has become one of the most concerned matters of a lot of people. This essay will discuss clearly both [Vấn đề A] and [Vấn đề B] as well as give some reasons and examples to support the discussion before reaching a logical conclusion.\n\nThere are many main [Vấn đề A] of this matter. In the first place, the most important thing is that [Ý chính 1]. Second, another main thing is that [Ý chính 2]. Moreover, it is worth noting that [Ý chính 3]. Finally, [Ý chính 4]. These are some of the primary [Vấn đề A] of [Chủ đề].\n\nOn the other hand, this matter has some major [Vấn đề B] as follows. First of all, we cannot deny that [Ý chính 1]. Secondly, one of the main points is that [Ý chính 2]. In addition, [Ý chính 3]. In the end, [Ý chính 4]. These are some major [Vấn đề B] of [Chủ đề].\n\nTaking everything into consideration, besides some [Vấn đề A] and there are several [Vấn đề B] of this matter discussed clearly in the essay above. From my point of view, [Ý kiến riêng].` },
+            { id: 'essay-2-12-quan-diem', duration: 10, title: 'Essay Dạng 2: 1/2 Quan Điểm', content: `In this day and age, it is thought by a lot of people that [1 Quan điểm]. From my point of view, I partly agree with this view due to some following reasons and examples that will be discussed in this essay.\n\nOn the one hand, I agree with this statement to a certain extent for several main reasons. In the first place, the most important thing is that [Agree 1]. Second, another main thing is that [Agree 2]. Moreover, it is worth noting that [Agree 3]. Finally, [Agree 4]. These are the primary reasons why I support this view.\n\nOn the other hand, there are some reasons for my disagreement with this view. First of all, we cannot deny that [Disagree / Agree 1]. Secondly, one of the main points is that [Disagree / Agree 2]. In addition, [Disagree / Agree 3]. In the end, [Disagree / Agree 4]. These are the main reasons for my reservation about this view.\n\nTaking everything into consideration, it is undeniable that there are a lot of different views about this matter. From my point of view, I think people have their own views because there are two sides to this issue.` },
+            // CÁC CÂU LÝ DO THÊM VÀO TỪ HÌNH ẢNH
             { id: 'b1', duration: 3, title: 'I. Benefits - 1. Thư giãn', content: `It can help us relax and reduce stress. We can feel happy and comfortable. It is very important.` },
             { id: 'b2', duration: 3, title: 'I. Benefits - 2. Kiến thức', content: `It can help us widen knowledge and learn a lot of new things. It is very useful and necessary for our work and study` },
             { id: 'b3', duration: 3, title: 'I. Benefits - 3. Tìm thông tin nhanh', content: `It can help us find information quickly and easily. We can save time. It is very fast.` },
@@ -363,7 +365,7 @@
             if (template.duration) {
                 return template.duration * 60;
             }
-            // Fallback nếu không có cấu hình duration (sẽ được init xử lý)
+            // Fallback nếu không có cấu hình duration
             return 3 * 60; 
         }
 
@@ -521,7 +523,9 @@
             if(templates.length === 0) {
                 document.getElementById('template-title').innerText = "Chưa có dữ liệu";
                 document.getElementById('user-input').setAttribute('disabled', 'true');
-                document.getElementById('progress-bar').innerHTML = '';
+                if (document.getElementById('progress-bar')) {
+                    document.getElementById('progress-bar').innerHTML = '';
+                }
                 document.getElementById('timer-container').classList.add('hidden');
                 return;
             } else {
@@ -536,31 +540,37 @@
             // Progress Bar
             const maxDots = 20; 
             const progressContainer = document.getElementById('progress-bar');
-            progressContainer.innerHTML = '';
             
-            let startDot = 0;
-            let endDot = templates.length;
-            
-            if (templates.length > maxDots) {
-                startDot = Math.max(0, currentIndex - Math.floor(maxDots/2));
-                endDot = Math.min(templates.length, startDot + maxDots);
-                if (endDot - startDot < maxDots) {
-                    startDot = Math.max(0, endDot - maxDots);
+            if (progressContainer) {
+                progressContainer.innerHTML = '';
+                let startDot = 0;
+                let endDot = templates.length;
+                
+                if (templates.length > maxDots) {
+                    startDot = Math.max(0, currentIndex - Math.floor(maxDots/2));
+                    endDot = Math.min(templates.length, startDot + maxDots);
+                    if (endDot - startDot < maxDots) {
+                        startDot = Math.max(0, endDot - maxDots);
+                    }
                 }
-            }
 
-            for (let i = startDot; i < endDot; i++) {
-                const div = document.createElement('div');
-                div.className = `h-2 w-2 md:w-3 rounded-full transition-all ${i === currentIndex ? 'bg-blue-600 scale-125' : (i < currentIndex ? 'bg-blue-400' : 'bg-white/60')}`;
-                div.title = `Bài ${i+1}`;
-                progressContainer.appendChild(div);
+                for (let i = startDot; i < endDot; i++) {
+                    const div = document.createElement('div');
+                    div.className = `h-2 w-2 md:w-3 rounded-full transition-all ${i === currentIndex ? 'bg-blue-600 scale-125' : (i < currentIndex ? 'bg-blue-400' : 'bg-white/60')}`;
+                    div.title = `Bài ${i+1}`;
+                    progressContainer.appendChild(div);
+                }
             }
 
             const btnNextText = currentIndex < templates.length - 1 ? 'Dàn Ý Tiếp Theo' : 'Quay Lại Từ Đầu';
             document.querySelector('#btn-next span').innerText = btnNextText;
 
             const currentTemplateWords = getWordCount(templates[currentIndex].content);
-            document.getElementById('word-count').setAttribute('data-target', currentTemplateWords);
+            const wordCountEl = document.getElementById('word-count');
+            
+            if (wordCountEl) {
+                wordCountEl.setAttribute('data-target', currentTemplateWords);
+            }
 
             // Reset input and view
             document.getElementById('user-input').value = '';
@@ -578,9 +588,12 @@
         function updateWordCount() {
             const val = document.getElementById('user-input').value;
             const words = getWordCount(val);
-            const targetWords = document.getElementById('word-count').getAttribute('data-target') || 0;
+            const wordCountEl = document.getElementById('word-count');
             
-            document.getElementById('word-count').innerText = `${words} / ${targetWords} từ`;
+            if (wordCountEl) {
+                const targetWords = wordCountEl.getAttribute('data-target') || 0;
+                wordCountEl.innerText = `${words} / ${targetWords} từ`;
+            }
             
             // Start timer immediately upon first keystroke
             if (!timerStarted && val.trim().length > 0) {
