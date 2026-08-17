@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VSTEP Writing</title>
+    <title>VSTEP Outline Master</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Tùy chỉnh thanh cuộn cho giao diện Glassmorphism */
@@ -80,36 +80,30 @@
         <div class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar relative">
             
             <!-- SECTION: PRACTICE -->
-            <div id="section-practice" class="w-full max-w-6xl mx-auto flex flex-col gap-4 sm:gap-6 animate-fade-in block">
+            <div id="section-practice" class="w-full max-w-6xl mx-auto flex flex-col animate-fade-in block">
                 
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/30 p-4 rounded-2xl border border-white/50">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white/30 p-4 rounded-2xl border border-white/50">
                     <div>
-                        <p class="text-sm font-semibold text-blue-600 tracking-wider uppercase mb-1">Dàn ý <span id="current-index-display">1</span> / <span id="total-templates-display">6</span></p>
                         <h2 id="template-title" class="text-2xl sm:text-3xl font-extrabold text-slate-800">Title</h2>
                     </div>
                     <!-- Progress Bar mini -->
-                    <div id="progress-bar" class="flex gap-1 flex-wrap justify-end"></div>
+                    
                 </div>
 
                 <!-- Input Mode -->
                 <div id="practice-input-mode" class="flex flex-col gap-4">
                     <div class="relative group">
-                        <!-- Tăng chiều cao lên 50vh - 60vh để gõ thoải mái trên Laptop -->
+                        <!-- Chiều cao thoải mái để gõ trên Laptop -->
                         <textarea
                             id="user-input"
                             oninput="updateWordCount()"
-                            placeholder="Đồng hồ sẽ tự động chạy khi bạn bắt đầu gõ. Gõ dàn ý của bạn vào đây..."
+                            placeholder="Gõ dàn ý của bạn vào đây..."
                             class="w-full h-[45vh] lg:h-[55vh] p-6 rounded-2xl bg-white/70 border-2 border-white/80 shadow-inner focus:outline-none focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-400/20 resize-none text-lg leading-relaxed text-slate-700 font-medium transition-all custom-scrollbar"
                         ></textarea>
-                        <div id="word-count" class="absolute bottom-4 right-4 text-sm text-slate-500 font-bold bg-white/90 px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm transition-opacity" data-target="0">
-                            0 / 0 từ
-                        </div>
+                        
                     </div>
 
-                    <div class="flex flex-col sm:flex-row justify-between items-center mt-1 gap-4">
-                        <p class="text-sm text-slate-600 bg-white/40 px-4 py-2 rounded-lg border border-white/60">
-                            💡 <span class="italic">Mẹo: Các từ nằm trong ngoặc vuông <strong class="text-blue-600">[ ]</strong> là vùng điền tự do, không bị tính lỗi sai.</span>
-                        </p>
+                    <div class="flex justify-end mt-1">
                         <button
                             id="btn-check"
                             onclick="handleCheck()"
@@ -163,7 +157,6 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-4 bg-white/30 p-5 rounded-2xl border border-white/50 gap-4">
                     <div>
                         <h2 class="text-2xl font-bold text-blue-900">Quản Lý Dàn Ý Mẫu</h2>
-                        <p class="text-slate-600 mt-2 text-sm bg-white/50 inline-block px-3 py-1 rounded-md border border-white">Sử dụng ngoặc vuông <strong>[ ]</strong> để tạo vùng điền tự do (hệ thống sẽ bỏ qua vùng này khi chấm điểm).</p>
                     </div>
                     <div class="flex flex-wrap gap-3 w-full md:w-auto">
                         <button 
@@ -191,7 +184,7 @@
         </div>
     </div>
 
-    <!-- Custom Modal (Message Box replacement for alert/confirm) -->
+    <!-- Custom Modal -->
     <div id="custom-modal" class="fixed inset-0 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
         <!-- Overlay -->
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModal(false)"></div>
@@ -212,92 +205,76 @@
     </div>
 
     <script>
-        // Data Mặc định
+        // Data Mặc định đã tích hợp thời gian (duration)
         const defaultTemplates = [
-            {
-                id: 'email-thong-dung',
-                title: 'Email Thông Dụng',
-                content: `Dear [Người nhận],\nHow have you been? I hope you are doing well lately. Many thank for your last letter. I feel very happy to hear from you. I hope everything in your life is very wonderful. I am writing this email for the following things\nFirst of all 1. Sencondly 2. In addition 3. Moreover 4. Last but not least 5.\nThat is pretty much everything for now. Please drop me a line whenever you are free time, as I am eager to hear your thoughts.\nBest wishes,\nHenry`
-            },
-            {
-                id: 'email-feedback',
-                title: 'Email Feedback/Complain',
-                content: `Dear [Người nhận],\nI hope you are doing well lately. I have just used your service. I feel your service is rather good but there is still something that I want to discuss. Therefore, now I am writing this email to give my own feedback/ complain after using your service.\nFirst of all 1. Sencondly 2. In addition 3. Moreover 4. Last but not least 5.\nThat is all for my feedback / complain. I hope that with some of my suggestions, it can help you improve your service in the future. Let me know if you want to have any further and information. Thank you for your time and consideration.\nBest wishes,\n\nHenry`
-            },
-            {
-                id: 'essay-1-2-yeu-cau',
-                title: 'Essay Dạng 1 - 2 Yêu Cầu',
-                content: `In this day and age, [Chủ đề] has become one of the most concerned matters of many people. This essay will discuss clearly both [Vấn đề A] and [Vấn đề B] as well as give some reasons and examples to support the discussion before reaching a logical conclusion.\n\nThere are many main [Vấn đề A] of this matter. In the first place, the most important thing is that [Ý chính 1]. Second, another main thing is that [Ý chính 2]. Moreover, it is worth noting that [Ý chính 3]. Finally, [Ý chính 4]. These are some of the primary [Vấn đề A] of [Chủ đề].\n\nOn the other hand, this matter has some major [Vấn đề B] as follows. First of all, we cannot deny that [Ý chính 1]. Secondly, one of the main points is that [Ý chính 2]. In addition, [Ý chính 3]. In the end, [Ý chính 4]. These are some major [Vấn đề B] of [Chủ đề].\n\nTaking everything into consideration, besides some [Vấn đề A] and there are several [Vấn đề B] of this matter discussed clearly in the essay above. From my point of view, [Ý kiến riêng].`
-            },
-            {
-                id: 'essay-2-1-quan-diem',
-                title: 'Essay Dạng 2 - 1 Quan Điểm',
-                content: `In this day and age, it is thought by many people that [1 Quan điểm]. From my point of view, I partly agree with this view due to some following reasons and examples that will be discussed in this essay.\n\nOn the one hand, I agree with this statement to a certain extent for several main reasons. In the first place, the most important thing is that [Agree 1]. Second, another main thing is that [Agree 2]. Moreover, it is worth noting that [Agree 3]. Finally, [Agree 4]. These are the primary reasons why I support this view.\n\nOn the other hand, there are some reasons for my disagreement with this view / agreement ưith the second view. First of all, we cannot deny that [Disagree 1]. Secondly, one of the main points is that [Disagree 2]. In addition, [Disagree 3]. In the end, it is clear that [Disagree 4]. These are the main reasons for my reservation about this view / agreement ưith the second view.\n\nTaking everything into consideration, it is undeniable that there are many different views about this matter. From my point of view, each individual has their own views due to two sides of this matter.`
-            },
-            // --- CÁC CÂU LÝ DO THÊM VÀO TỪ HÌNH ẢNH ---
-            { id: 'b1', title: 'I. Benefits - 1. Thư giãn', content: `It can help us relax and reduce stress. We can feel happy and comfortable. It is very important.` },
-            { id: 'b2', title: 'I. Benefits - 2. Kiến thức', content: `It can help us widen knowledge and learn a lot of new things. It is very useful and necessary for our work and study` },
-            { id: 'b3', title: 'I. Benefits - 3. Tìm thông tin nhanh', content: `It can help us find information quickly and easily. We can save time. It is very fast.` },
-            { id: 'b4', title: 'I. Benefits - 4. Thông tin chính xác', content: `It can help us know exact information. We will have a lot of reliable information. It is very useful` },
-            { id: 'b5', title: 'I. Benefits - 5. Kỹ năng', content: `It can help us learn a lot of necessary skills for work. It is also very important in our life` },
-            { id: 'b6', title: 'I. Benefits - 6. Kết bạn', content: `It can help us make friends with a lot of people. We can learn a lot of useful things from them. It is very good` },
-            { id: 'b7', title: 'I. Benefits - 7. Sức khỏe', content: `It can help us keep healthy and prevent sicknesses. It is very useful and good for health` },
-            { id: 'b8', title: 'I. Benefits - 8. Giữ dáng', content: `It can help us keep fit and have a good shape. It is very good for us. We will feel more confident` },
-            { id: 'b9', title: 'I. Benefits - 9. Môi trường', content: `It can help us protect the environment. It is very important and necessary for our life` },
-            { id: 'b10', title: 'I. Benefits - 10. Tiết kiệm tiền', content: `It can help us save a lot of money. We will not pay a lot of money for it. It is very suitable for many people` },
-            { id: 'b11', title: 'I. Benefits - 11. Kiếm tiền', content: `It can help us make a lot of money. We will have a better life. It is very important with everyone` },
-            { id: 'b12', title: 'I. Benefits - 12. Tiết kiệm thời gian', content: `It can help us save a lot of time because it is very fast. We will not spend a lot of time on it. It is very useful` },
-            { id: 'b13', title: 'I. Benefits - 13. Nhiều cơ hội việc làm', content: `It can help us have a lot of good jobs in the future easily. We can work in many places. It is very important` },
-            { id: 'b14', title: 'I. Benefits - 14. Học tập tốt hơn', content: `It can help us study better. It is very necessary and important in our study` },
-            { id: 'b15', title: 'I. Benefits - 15. Làm việc tốt hơn', content: `It can help us work better. It is very necessary and important in our work.` },
-            { id: 'b16', title: 'I. Benefits - 16. Tự do', content: `It can help us feel free and comfortable. We can do anything that we want. We will not depend on anyone` },
-            { id: 'b17', title: 'I. Benefits - 17. Quyền lựa chọn', content: `It can help everyone have the right to choose. It is suitable for our ability and the hobbies.` },
-            { id: 'b18', title: 'I. Benefits - 18. Giảm kẹt xe', content: `It can help us reduce traffic jams. We will save time when we go out. It is very important` },
-            { id: 'b19', title: 'I. Benefits - 19. Giảm tai nạn', content: `It can help us reduce traffic accidents. We will feel safe when we go out. It is very useful.` },
-            { id: 'b20', title: 'I. Benefits - 20. Phát triển kinh tế', content: `It can help us develop the economy. It is very important and necessary` },
-            { id: 'b21', title: 'I. Benefits - 21. Tạo việc làm', content: `It can help us create a lot of jobs for everyone. It is very necessary` },
-            { id: 'b22', title: 'I. Benefits - 22. Tránh mâu thuẫn', content: `It can help us avoid a lot of conflicts. We will not feel stressed` },
-            { id: 'b23', title: 'I. Benefits - 23. An toàn', content: `It can help us feel safe. We can avoid some problems. It is very useful` },
-            { id: 'b24', title: 'I. Benefits - 24. Tiện lợi', content: `It can bring a lot of benefits for us. We cannot deny its importance in our life.` },
-            { id: 'd25', title: 'II. Drawbacks - 25. Ảnh hưởng sức khỏe', content: `It can affect our health. It is not good for our health and it can cause a lot of sicknesses. It is very dangerous` },
-            { id: 'd26', title: 'II. Drawbacks - 26. Ảnh hưởng công việc/học', content: `It can affect our study / work. It is very bad for our study / work` },
-            { id: 'd27', title: 'II. Drawbacks - 27. Thông tin không chính xác', content: `It will not provide exact information. We cannot know a lot of reliable information. It is very harmful` },
-            { id: 'd28', title: 'II. Drawbacks - 28. Lãng phí thời gian', content: `It will spend a lot of time. We will not have a lot of time to do other useful things. It is very bad` },
-            { id: 'd29', title: 'II. Drawbacks - 29. Tốn tiền', content: `It will cost a lot of money. We must pay a lot of money for it because it is very expensive` },
-            { id: 'd30', title: 'II. Drawbacks - 30. Ồn ào, đông đúc', content: `It is very noisy and crowded. it will make us feel uncomfortable` },
-            { id: 'd31_1', title: 'II. Drawbacks - 31. Ô nhiễm (1)', content: `It will cause the environment pollution. It will affect health of people. it is very dangerous` },
-            { id: 'd31_2', title: 'II. Drawbacks - 31. Ô nhiễm (2)', content: `The environment pollution will cause this problem. It is very serious` },
-            { id: 'd32', title: 'II. Drawbacks - 32. Gây vấn đề môi trường', content: `It will cause a lot of environment problems such as the climate change, the greenhouse effect, the global warming. It is very serious / will cause this problem. It is very serious` },
-            { id: 'd33', title: 'II. Drawbacks - 33. Bị lừa', content: `We can be cheated. We can lose a lot of important things. It is very dangerous` },
-            { id: 'd34', title: 'II. Drawbacks - 34. Mất thông tin', content: `We can lose a lot of important things such as personal information, even we can lose a lot of money. It is very serious` },
-            { id: 'd35_1', title: 'II. Drawbacks - 35. Bùng nổ dân số (1)', content: `Overpopulation can cause this problem. It is very serious and can cause a lot of problems` },
-            { id: 'd35_2', title: 'II. Drawbacks - 35. Bùng nổ dân số (2)', content: `It can cause overpopulation. It is very serious and can cause a lot of problems` },
-            { id: 'd36', title: 'II. Drawbacks - 36. Gây vấn đề xã hội', content: `It will cause a lot of problems in society such as traffic jams, traffic accidents, unemployment, lack of houses, so on. It is very serious.` },
-            { id: 'd37', title: 'II. Drawbacks - 37. Gây mâu thuẫn', content: `It will cause a lot of conflicts because there are a lot of different thinkings. We will feel stressed. It is uncomfortable` },
-            { id: 'd38', title: 'II. Drawbacks - 38. Buồn/cô đơn', content: `It will make us feel sad and lonely. We feel stressed` },
-            { id: 'd39', title: 'II. Drawbacks - 39. Phụ thuộc vào người khác', content: `It will make us depend on other people. We will feel uncomfortable. It is very inconvenient` },
-            { id: 'd40', title: 'II. Drawbacks - 40. Phụ thuộc vào thiết bị', content: `It will make us depend on it/ the device. We have to use it whenever we study / work. It is very inconvenient` },
-            { id: 'd41', title: 'II. Drawbacks - 41. Rủi ro/nguy hiểm', content: `It can cause some risks for us. We will feel unsafe. It can affect our health.` },
-            { id: 'd42', title: 'II. Drawbacks - 42. Bất lợi', content: `It can cause a lot of disadvantages for us. We cannot deny a lot of drawbacks that it can cause in our life.` },
-            { id: 'c43', title: 'III. Causes - 43. Thức ăn không tốt', content: `We eat a lot of unhealthy foods. We eat a lot of fast foods such as pizza, fried food, milk tea, so on. it can make us fat and cause a lot of sicknesses.` },
-            { id: 'c44', title: 'III. Causes - 44. Thói quen không tốt', content: `We have a lot of unhealthy habits. We do not usually exercise, play sports. We usually stay up late. It can make us fat and cause a lot of sicknesses` },
-            { id: 'c45', title: 'III. Causes - 45. Ba mẹ không có thời gian', content: `parents do not have a lot of time in order to take care of their children. They will lack love and cannot share with their parents` },
-            { id: 'c46', title: 'III. Causes - 46. Hành động xấu', content: `We can copy bad actions of some bad friends such as smoking, drinking, using bad words, crimes, so on.` },
-            { id: 'c47', title: 'III. Causes - 47. Vi phạm pháp luật', content: `Some people break the laws. It will cause many serious problems` },
-            { id: 'c48', title: 'III. Causes - 48. Giao thông tệ', content: `The traffic system is bad. A lot of streets are very small and hard to move. It can cause traffic accidents and traffic jams` },
-            { id: 's49', title: 'IV. Solutions - 49. Trồng cây', content: `We should plant a lot of trees in many places. We can plant trees in the parks, the school yards, along the streets, so on. it will help us create the fresh air.` },
-            { id: 's50', title: 'IV. Solutions - 50. Dùng giao thông công cộng', content: `Everyone should use public transport. They can use buses instead of a lot of private transport such as motorbikes, cars to reduce smoke, dust in the air.` },
-            { id: 's51', title: 'IV. Solutions - 51. Bảo vệ môi trường', content: `We should protect the environment. It can help us solve this problem. It is very necessary.` },
-            { id: 's52', title: 'IV. Solutions - 52. Thức ăn tốt', content: `people should eat a lot of healthy foods. We should eat a lot of vegetables, fruits, fish, so on. it can help us keep healthy and prevent a lot of sicknesses` },
-            { id: 's53', title: 'IV. Solutions - 53. Tránh thói quen xấu', content: `People should avoid a lot of unhealthy habits. We should not stay up late, drink beer, eat a lot of fast food. It can cause a lot of sicknesses.` },
-            { id: 's54', title: 'IV. Solutions - 54. Tiết kiệm điện/nước', content: `We should save water / electricity. We should turn off when not in use. It can help us protect the environent and save a lot of money.` },
-            { id: 's55', title: 'IV. Solutions - 55. Giải pháp (Chung)', content: `Everyone should raise awareness about this problem. We should consider carefully disadvantages that it can cause so that we can find a lot of ways to prevent it.` },
-            { id: 's56', title: 'IV. Solutions - 56. Chính phủ ra luật', content: `The government should pass the laws to solve this problem. It will help us have a safe life and it can protect everyone` },
-            { id: 's57', title: 'IV. Solutions - 57. Chính phủ phạt', content: `The government should fine bad people when they break the laws. They should fine a lot of money. They will feel afraid and will not do again` },
-            { id: 's58', title: 'IV. Solutions - 58. Chính phủ tạo việc làm', content: `The government should create a lot of jobs for everyone, especially young people in many places. When they have a good job, they will not go to work in far places.` },
-            { id: 's59', title: 'IV. Solutions - 59. Chính phủ cải thiện giao thông', content: `The government should improve the traffic system. They can widen streets, build public transport, so on. It can help us reduce traffic accidents and traffic jam` },
-            { id: 's60', title: 'IV. Solutions - 60. Ba mẹ giành thời gian', content: `Parents should spend a lot of time for their children. They should take care of many things in life with their children and find the best solutions for their children.` },
-            { id: 's61', title: 'IV. Solutions - 61. Ba mẹ có nhiều hoạt động với con', content: `Parents should encourage their children to take part in useful activities. Parents and children can join in a lot of activities together. They can play sports, go swimming, go camping, travel.` }
+           { id: 'email-thong-dung', duration: 5, title: 'Email: Thông Dụng', content: `Dear [Người nhận],\nHow have you been? I hope you are doing well lately. Many thank for your last letter. I feel very happy to hear from you. I hope everything in your life is very wonderful. I am writing this email for the following things\nFirst of all 1. Sencondly 2. In addition 3. Moreover 4. Last but not least 5.\nThat is pretty much everything for now. Please drop me a line whenever you are free time, as I am eager to hear your thoughts.\nBest wishes,\nHenry` },
+ { id: 'email-feedback', duration: 5, title: 'Email: Feedback/Complain', content: `Dear [Người nhận],\nI hope you are doing well lately. I have just used your service. I feel your service is rather good but there is still something that I want to discuss. Therefore, now I am writing this email to give my own feedback/ complain after using your service.\nFirst of all 1. Sencondly 2. In addition 3. Moreover 4. Last but not least 5.\nThat is all for my feedback / complain. I hope that with some of my suggestions, it can help you improve your service in the future. Let me know if you want to have any further and information. Thank you for your time and consideration.\nBest wishes,\n\nHenry` },
+ { id: 'essay-1-21-yeu-cau', duration: 10, title: 'Essay Dạng 1: 2/1 Yêu Cầu', content: `In this day and age, [Chủ đề] has become one of the most concerned matters of a lot of people. This essay will discuss clearly both [Vấn đề A] and [Vấn đề B] as well as give some reasons and examples to support the discussion before reaching a logical conclusion.\n\nThere are many main [Vấn đề A] of this matter. In the first place, the most important thing is that [Ý chính 1]. Second, another main thing is that [Ý chính 2]. Moreover, it is worth noting that [Ý chính 3]. Finally, [Ý chính 4]. These are some of the primary [Vấn đề A] of [Chủ đề].\n\nOn the other hand, this matter has some major [Vấn đề B] as follows. First of all, we cannot deny that [Ý chính 1]. Secondly, one of the main points is that [Ý chính 2]. In addition, [Ý chính 3]. In the end, [Ý chính 4]. These are some major [Vấn đề B] of [Chủ đề].\n\nTaking everything into consideration, besides some [Vấn đề A] and there are several [Vấn đề B] of this matter discussed clearly in the essay above. From my point of view, [Ý kiến riêng].` },
+ { id: 'essay-2-12-quan-diem', duration: 10, title: 'Essay Dạng 2: 1/2 Quan Điểm', content: `In this day and age, it is thought by a lot of people that [1 Quan điểm]. From my point of view, I partly agree with this view due to some following reasons and examples that will be discussed in this essay.\n\nOn the one hand, I agree with this statement to a certain extent for several main reasons. In the first place, the most important thing is that [Agree 1]. Second, another main thing is that [Agree 2]. Moreover, it is worth noting that [Agree 3]. Finally, [Agree 4]. These are the primary reasons why I support this view.\n\nOn the other hand, there are some reasons for my disagreement with this view. First of all, we cannot deny that [Disagree / Agree 1]. Secondly, one of the main points is that [Disagree / Agree 2]. In addition, [Disagree / Agree 3]. In the end, [Disagree / Agree 4]. These are the main reasons for my reservation about this view.\n\nTaking everything into consideration, it is undeniable that there are a lot of different views about this matter. From my point of view, I think people have their own views because there are two sides to this issue.` },
+ // CÁC CÂU LÝ DO THÊM VÀO TỪ HÌNH ẢNH
+            { id: 'b1', duration: 3, title: 'I. Benefits - 1. Thư giãn', content: `It can help us relax and reduce stress. We can feel happy and comfortable. It is very important.` },
+            { id: 'b2', duration: 3, title: 'I. Benefits - 2. Kiến thức', content: `It can help us widen knowledge and learn a lot of new things. It is very useful and necessary for our work and study` },
+            { id: 'b3', duration: 3, title: 'I. Benefits - 3. Tìm thông tin nhanh', content: `It can help us find information quickly and easily. We can save time. It is very fast.` },
+            { id: 'b4', duration: 3, title: 'I. Benefits - 4. Thông tin chính xác', content: `It can help us know exact information. We will have a lot of reliable information. It is very useful` },
+            { id: 'b5', duration: 3, title: 'I. Benefits - 5. Kỹ năng', content: `It can help us learn a lot of necessary skills for work. It is also very important in our life` },
+            { id: 'b6', duration: 3, title: 'I. Benefits - 6. Kết bạn', content: `It can help us make friends with a lot of people. We can learn a lot of useful things from them. It is very good` },
+            { id: 'b7', duration: 3, title: 'I. Benefits - 7. Sức khỏe', content: `It can help us keep healthy and prevent sicknesses. It is very useful and good for health` },
+            { id: 'b8', duration: 3, title: 'I. Benefits - 8. Giữ dáng', content: `It can help us keep fit and have a good shape. It is very good for us. We will feel more confident` },
+            { id: 'b9', duration: 3, title: 'I. Benefits - 9. Môi trường', content: `It can help us protect the environment. It is very important and necessary for our life` },
+            { id: 'b10', duration: 3, title: 'I. Benefits - 10. Tiết kiệm tiền', content: `It can help us save a lot of money. We will not pay a lot of money for it. It is very suitable for many people` },
+            { id: 'b11', duration: 3, title: 'I. Benefits - 11. Kiếm tiền', content: `It can help us make a lot of money. We will have a better life. It is very important with everyone` },
+            { id: 'b12', duration: 3, title: 'I. Benefits - 12. Tiết kiệm thời gian', content: `It can help us save a lot of time because it is very fast. We will not spend a lot of time on it. It is very useful` },
+            { id: 'b13', duration: 3, title: 'I. Benefits - 13. Nhiều cơ hội việc làm', content: `It can help us have a lot of good jobs in the future easily. We can work in many places. It is very important` },
+            { id: 'b14', duration: 3, title: 'I. Benefits - 14. Học tập tốt hơn', content: `It can help us study better. It is very necessary and important in our study` },
+            { id: 'b15', duration: 3, title: 'I. Benefits - 15. Làm việc tốt hơn', content: `It can help us work better. It is very necessary and important in our work.` },
+            { id: 'b16', duration: 3, title: 'I. Benefits - 16. Tự do', content: `It can help us feel free and comfortable. We can do anything that we want. We will not depend on anyone` },
+            { id: 'b17', duration: 3, title: 'I. Benefits - 17. Quyền lựa chọn', content: `It can help everyone have the right to choose. It is suitable for our ability and the hobbies.` },
+            { id: 'b18', duration: 3, title: 'I. Benefits - 18. Giảm kẹt xe', content: `It can help us reduce traffic jams. We will save time when we go out. It is very important` },
+            { id: 'b19', duration: 3, title: 'I. Benefits - 19. Giảm tai nạn', content: `It can help us reduce traffic accidents. We will feel safe when we go out. It is very useful.` },
+            { id: 'b20', duration: 3, title: 'I. Benefits - 20. Phát triển kinh tế', content: `It can help us develop the economy. It is very important and necessary` },
+            { id: 'b21', duration: 3, title: 'I. Benefits - 21. Tạo việc làm', content: `It can help us create a lot of jobs for everyone. It is very necessary` },
+            { id: 'b22', duration: 3, title: 'I. Benefits - 22. Tránh mâu thuẫn', content: `It can help us avoid a lot of conflicts. We will not feel stressed` },
+            { id: 'b23', duration: 3, title: 'I. Benefits - 23. An toàn', content: `It can help us feel safe. We can avoid some problems. It is very useful` },
+            { id: 'b24', duration: 3, title: 'I. Benefits - 24. Tiện lợi', content: `It can bring a lot of benefits for us. We cannot deny its importance in our life.` },
+            { id: 'd25', duration: 3, title: 'II. Drawbacks - 25. Ảnh hưởng sức khỏe', content: `It can affect our health. It is not good for our health and it can cause a lot of sicknesses. It is very dangerous` },
+            { id: 'd26', duration: 3, title: 'II. Drawbacks - 26. Ảnh hưởng công việc/học', content: `It can affect our study / work. It is very bad for our study / work` },
+            { id: 'd27', duration: 3, title: 'II. Drawbacks - 27. Thông tin không chính xác', content: `It will not provide exact information. We cannot know a lot of reliable information. It is very harmful` },
+            { id: 'd28', duration: 3, title: 'II. Drawbacks - 28. Lãng phí thời gian', content: `It will spend a lot of time. We will not have a lot of time to do other useful things. It is very bad` },
+            { id: 'd29', duration: 3, title: 'II. Drawbacks - 29. Tốn tiền', content: `It will cost a lot of money. We must pay a lot of money for it because it is very expensive` },
+            { id: 'd30', duration: 3, title: 'II. Drawbacks - 30. Ồn ào, đông đúc', content: `It is very noisy and crowded. it will make us feel uncomfortable` },
+            { id: 'd31_1', duration: 3, title: 'II. Drawbacks - 31. Ô nhiễm (1)', content: `It will cause the environment pollution. It will affect health of people. it is very dangerous` },
+            { id: 'd31_2', duration: 3, title: 'II. Drawbacks - 31. Ô nhiễm (2)', content: `The environment pollution will cause this problem. It is very serious` },
+            { id: 'd32', duration: 3, title: 'II. Drawbacks - 32. Gây vấn đề môi trường', content: `It will cause a lot of environment problems such as the climate change, the greenhouse effect, the global warming. It is very serious / will cause this problem. It is very serious` },
+            { id: 'd33', duration: 3, title: 'II. Drawbacks - 33. Bị lừa', content: `We can be cheated. We can lose a lot of important things. It is very dangerous` },
+            { id: 'd34', duration: 3, title: 'II. Drawbacks - 34. Mất thông tin', content: `We can lose a lot of important things such as personal information, even we can lose a lot of money. It is very serious` },
+            { id: 'd35_1', duration: 3, title: 'II. Drawbacks - 35. Bùng nổ dân số (1)', content: `Overpopulation can cause this problem. It is very serious and can cause a lot of problems` },
+            { id: 'd35_2', duration: 3, title: 'II. Drawbacks - 35. Bùng nổ dân số (2)', content: `It can cause overpopulation. It is very serious and can cause a lot of problems` },
+            { id: 'd36', duration: 3, title: 'II. Drawbacks - 36. Gây vấn đề xã hội', content: `It will cause a lot of problems in society such as traffic jams, traffic accidents, unemployment, lack of houses, so on. It is very serious.` },
+            { id: 'd37', duration: 3, title: 'II. Drawbacks - 37. Gây mâu thuẫn', content: `It will cause a lot of conflicts because there are a lot of different thinkings. We will feel stressed. It is uncomfortable` },
+            { id: 'd38', duration: 3, title: 'II. Drawbacks - 38. Buồn/cô đơn', content: `It will make us feel sad and lonely. We feel stressed` },
+            { id: 'd39', duration: 3, title: 'II. Drawbacks - 39. Phụ thuộc vào người khác', content: `It will make us depend on other people. We will feel uncomfortable. It is very inconvenient` },
+            { id: 'd40', duration: 3, title: 'II. Drawbacks - 40. Phụ thuộc vào thiết bị', content: `It will make us depend on it/ the device. We have to use it whenever we study / work. It is very inconvenient` },
+            { id: 'd41', duration: 3, title: 'II. Drawbacks - 41. Rủi ro/nguy hiểm', content: `It can cause some risks for us. We will feel unsafe. It can affect our health.` },
+            { id: 'd42', duration: 3, title: 'II. Drawbacks - 42. Bất lợi', content: `It can cause a lot of disadvantages for us. We cannot deny a lot of drawbacks that it can cause in our life.` },
+            { id: 'c43', duration: 3, title: 'III. Causes - 43. Thức ăn không tốt', content: `We eat a lot of unhealthy foods. We eat a lot of fast foods such as pizza, fried food, milk tea, so on. it can make us fat and cause a lot of sicknesses.` },
+            { id: 'c44', duration: 3, title: 'III. Causes - 44. Thói quen không tốt', content: `We have a lot of unhealthy habits. We do not usually exercise, play sports. We usually stay up late. It can make us fat and cause a lot of sicknesses` },
+            { id: 'c45', duration: 3, title: 'III. Causes - 45. Ba mẹ không có thời gian', content: `parents do not have a lot of time in order to take care of their children. They will lack love and cannot share with their parents` },
+            { id: 'c46', duration: 3, title: 'III. Causes - 46. Hành động xấu', content: `We can copy bad actions of some bad friends such as smoking, drinking, using bad words, crimes, so on.` },
+            { id: 'c47', duration: 3, title: 'III. Causes - 47. Vi phạm pháp luật', content: `Some people break the laws. It will cause many serious problems` },
+            { id: 'c48', duration: 3, title: 'III. Causes - 48. Giao thông tệ', content: `The traffic system is bad. A lot of streets are very small and hard to move. It can cause traffic accidents and traffic jams` },
+            { id: 's49', duration: 3, title: 'IV. Solutions - 49. Trồng cây', content: `We should plant a lot of trees in many places. We can plant trees in the parks, the school yards, along the streets, so on. it will help us create the fresh air.` },
+            { id: 's50', duration: 3, title: 'IV. Solutions - 50. Dùng giao thông công cộng', content: `Everyone should use public transport. They can use buses instead of a lot of private transport such as motorbikes, cars to reduce smoke, dust in the air.` },
+            { id: 's51', duration: 3, title: 'IV. Solutions - 51. Bảo vệ môi trường', content: `We should protect the environment. It can help us solve this problem. It is very necessary.` },
+            { id: 's52', duration: 3, title: 'IV. Solutions - 52. Thức ăn tốt', content: `people should eat a lot of healthy foods. We should eat a lot of vegetables, fruits, fish, so on. it can help us keep healthy and prevent a lot of sicknesses` },
+            { id: 's53', duration: 3, title: 'IV. Solutions - 53. Tránh thói quen xấu', content: `People should avoid a lot of unhealthy habits. We should not stay up late, drink beer, eat a lot of fast food. It can cause a lot of sicknesses.` },
+            { id: 's54', duration: 3, title: 'IV. Solutions - 54. Tiết kiệm điện/nước', content: `We should save water / electricity. We should turn off when not in use. It can help us protect the environent and save a lot of money.` },
+            { id: 's55', duration: 3, title: 'IV. Solutions - 55. Giải pháp (Chung)', content: `Everyone should raise awareness about this problem. We should consider carefully disadvantages that it can cause so that we can find a lot of ways to prevent it.` },
+            { id: 's56', duration: 3, title: 'IV. Solutions - 56. Chính phủ ra luật', content: `The government should pass the laws to solve this problem. It will help us have a safe life and it can protect everyone` },
+            { id: 's57', duration: 3, title: 'IV. Solutions - 57. Chính phủ phạt', content: `The government should fine bad people when they break the laws. They should fine a lot of money. They will feel afraid and will not do again` },
+            { id: 's58', duration: 3, title: 'IV. Solutions - 58. Chính phủ tạo việc làm', content: `The government should create a lot of jobs for everyone, especially young people in many places. When they have a good job, they will not go to work in far places.` },
+            { id: 's59', duration: 3, title: 'IV. Solutions - 59. Chính phủ cải thiện giao thông', content: `The government should improve the traffic system. They can widen streets, build public transport, so on. It can help us reduce traffic accidents and traffic jam` },
+            { id: 's60', duration: 3, title: 'IV. Solutions - 60. Ba mẹ giành thời gian', content: `Parents should spend a lot of time for their children. They should take care of many things in life with their children and find the best solutions for their children.` },
+            { id: 's61', duration: 3, title: 'IV. Solutions - 61. Ba mẹ có nhiều hoạt động với con', content: `Parents should encourage their children to take part in useful activities. Parents and children can join in a lot of activities together. They can play sports, go swimming, go camping, travel.` }
         ];
 
         // State variables
@@ -381,18 +358,13 @@
             }
         }
 
-        // Xác định thời gian dựa vào tiêu đề hoặc ID
         function getTemplateDuration(template) {
-            const id = template.id.toLowerCase();
-            const title = template.title.toLowerCase();
-            
-            if (id.includes('email') || title.includes('email')) {
-                return 5 * 60; // 7 phút
-            } else if (id.includes('essay') || title.includes('essay')) {
-                return 10 * 60; // 15 phút
-            } else {
-                return 2 * 60; // 3 phút mặc định cho các câu ngắn
+            // Lấy thời gian từ config, quy đổi sang giây
+            if (template.duration) {
+                return template.duration * 60;
             }
+            // Fallback nếu không có cấu hình duration (sẽ được init xử lý)
+            return 3 * 60; 
         }
 
         function formatTime(totalSeconds) {
@@ -478,6 +450,19 @@
                 try {
                     templates = JSON.parse(saved);
                     let needsSave = false;
+                    
+                    // Thêm trường duration nếu dữ liệu cũ chưa có
+                    templates.forEach(t => {
+                        if (t.duration === undefined) {
+                            const id = (t.id || '').toLowerCase();
+                            const title = (t.title || '').toLowerCase();
+                            if (id.includes('email') || title.includes('email')) t.duration = 7;
+                            else if (id.includes('essay') || title.includes('essay')) t.duration = 15;
+                            else t.duration = 3;
+                            needsSave = true;
+                        }
+                    });
+
                     defaultTemplates.forEach(defTpl => {
                         if (!templates.find(t => t.id === defTpl.id)) {
                             templates.push(defTpl);
@@ -535,8 +520,6 @@
         function loadPracticeTemplate() {
             if(templates.length === 0) {
                 document.getElementById('template-title').innerText = "Chưa có dữ liệu";
-                document.getElementById('current-index-display').innerText = 0;
-                document.getElementById('total-templates-display').innerText = 0;
                 document.getElementById('user-input').setAttribute('disabled', 'true');
                 document.getElementById('progress-bar').innerHTML = '';
                 document.getElementById('timer-container').classList.add('hidden');
@@ -545,8 +528,6 @@
                 document.getElementById('user-input').removeAttribute('disabled');
             }
 
-            document.getElementById('current-index-display').innerText = currentIndex + 1;
-            document.getElementById('total-templates-display').innerText = templates.length;
             document.getElementById('template-title').innerText = templates[currentIndex].title;
             
             // Reset and configure timer for this specific template
@@ -784,16 +765,26 @@
                 const div = document.createElement('div');
                 div.className = "bg-white/80 p-5 rounded-2xl shadow-md border border-white focus-within:ring-2 focus-within:ring-blue-400 focus-within:border-transparent transition-all relative group flex flex-col h-full";
                 
+                // Hiển thị phần nhập Tên, Thời gian và text Content
                 div.innerHTML = `
-                    <div class="flex justify-between items-start mb-3 gap-2">
-                        <input type="text" value="${template.title}" 
-                            class="font-bold text-slate-800 bg-white/50 rounded-lg border-transparent hover:border-slate-300 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 w-full px-2 py-1 transition-all"
-                            onchange="updateTemplateTitle(${index}, this.value)"
-                            placeholder="Tên dàn ý..."
-                        />
-                        <button onclick="handleDeleteTemplate(${index})" class="text-red-400 hover:text-red-600 p-2 bg-red-50 hover:bg-red-100 rounded-lg opacity-100 md:opacity-0 group-hover:opacity-100 transition-all" title="Xóa dàn ý này">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
-                        </button>
+                    <div class="flex flex-col mb-3 gap-2">
+                        <div class="flex justify-between items-start gap-2">
+                            <input type="text" value="${template.title}" 
+                                class="font-bold text-slate-800 bg-white/50 rounded-lg border-transparent hover:border-slate-300 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 w-full px-2 py-1 transition-all"
+                                onchange="updateTemplateTitle(${index}, this.value)"
+                                placeholder="Tên dàn ý..."
+                            />
+                            <button onclick="handleDeleteTemplate(${index})" class="text-red-400 hover:text-red-600 p-2 bg-red-50 hover:bg-red-100 rounded-lg opacity-100 md:opacity-0 group-hover:opacity-100 transition-all" title="Xóa dàn ý này">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2 px-2">
+                            <label class="text-sm text-slate-600 font-medium">Thời gian (phút):</label>
+                            <input type="number" min="1" max="120" value="${template.duration || 3}" 
+                                class="w-16 text-center font-bold text-blue-700 bg-white/50 rounded-lg border-transparent hover:border-slate-300 focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 py-1 transition-all"
+                                onchange="updateTemplateDuration(${index}, this.value)"
+                            />
+                        </div>
                     </div>
                     <textarea 
                         id="config-textarea-${index}"
@@ -809,6 +800,13 @@
         function updateTemplateTitle(index, newTitle) {
             templates[index].title = newTitle;
         }
+        
+        function updateTemplateDuration(index, newDuration) {
+            const mins = parseInt(newDuration);
+            if (!isNaN(mins) && mins > 0) {
+                templates[index].duration = mins;
+            }
+        }
 
         function updateTemplateContent(index, newValue) {
             templates[index].content = newValue;
@@ -819,7 +817,8 @@
             templates.unshift({
                 id: newId,
                 title: 'Dàn ý mới',
-                content: ''
+                content: '',
+                duration: 5 // Mặc định 5 phút khi thêm mới
             });
             renderConfigList();
         }
